@@ -66,6 +66,12 @@ python src/data/clean_transform.py
 
 # 3. Train Model (Saves model.joblib locally and to S3)
 python src/models/train_model.py
+
+### 2b. Run Unit Tests (New)
+Validate the code logic before starting the API:
+```bash
+pytest tests/ -v
+```
 ```
 
 ### 3. Start the API
