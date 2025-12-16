@@ -3,6 +3,7 @@ from pydantic import BaseModel
 import pandas as pd
 from src.api.model_loader import load_model
 import boto3
+import json
 
 from fastapi import BackgroundTasks
 from src.models.train_model import train # Import your training function
