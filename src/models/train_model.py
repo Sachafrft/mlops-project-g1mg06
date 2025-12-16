@@ -57,5 +57,21 @@ def train():
     s3.upload_file(LOCAL_MODEL_PATH, BUCKET_NAME, S3_KEY_MODEL)
     print("Training pipeline finished successfully.")
 
+    metrics = {
+        "accuracy": accuracy,
+        "model_type": "RandomForestClassifier",
+        "num_samples_trained": len(X_train),
+        "classification_report": classification_report(y_test, y_pred, output_dict=True)
+    }
+    
+    LOCAL_METRICS_PATH = "models/metrics.json"
+    S3_KEY_METRICS = "models/metrics.json"
+    
+    with open(LOCAL_METRICS_PATH, "w") as f:
+        json.dump(metrics, f)
+        
+    print(f"Uploading metrics to s3://{BUCKET_NAME}/{S3_KEY_METRICS}...")
+    s3.upload_file(LOCAL_METRICS_PATH, BUCKET_NAME, S3_KEY_METRICS)
+
 if __name__ == "__main__":
     train()

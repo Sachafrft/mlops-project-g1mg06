@@ -49,11 +49,15 @@ def health_check():
 
 @app.get("/metrics")
 def get_metrics():
-    return {
-        "model_type": "RandomForestClassifier",
-        "version": "1.0",
-        "description": "Predicts Sleep Apnea or Insomnia based on lifestyle factors"
-    }
+    s3 = boto3.client("s3")
+    BUCKET_NAME = "s3-g1mg06" 
+
+    try:
+        response = s3.get_object(Bucket=BUCKET_NAME, Key="models/metrics.json")
+        metrics_data = json.loads(response["Body"].read())
+        return metrics_data
+    except Exception as e:
+        raise HTTPException(status_code=404, detail=f"Metrics not found: {str(e)}")
 
 @app.post("/predict")
 def predict(input_data: SleepInput):
