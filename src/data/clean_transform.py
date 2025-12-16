@@ -4,7 +4,7 @@ import io
 from sklearn.preprocessing import LabelEncoder
 
 # CONFIGURATION
-BUCKET_NAME = "s3-gXmgXX"  # REPLACE WITH YOUR GROUP ID
+BUCKET_NAME = "s3-g1mg06"
 S3_KEY_RAW = "raw/sleep_data.csv"
 S3_KEY_CLEAN = "processed/sleep_data_clean.csv"
 
