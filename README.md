@@ -31,11 +31,16 @@ mlops-project-g1mg06/
 │   │   ├── download_data.py
 │   │   └── clean_transform.py
 │   └── models/           # Machine Learning Logic
-│       └── train_model.py
+│       ├── train_model.py
+│       └── model.joblib  # Trained model artifact
+├── tests/                # Unit Tests
+│   ├── test_api.py    
+│   └── test_components.py
 ├── frontend.py           # Streamlit User Interface
 ├── main.tf               # Terraform Infrastructure definition
 ├── Dockerfile            # Container definition
 ├── requirements.txt      # Python dependencies
+├── Sleep_health_and_lifestyle_dataset.csv  # Raw dataset
 └── README.md             # Project documentation
 ```
 
@@ -48,17 +53,57 @@ Link : https://6ixeyncmu8.eu-west-3.awsapprunner.com/docs
 ### Prerequisites
 - Python 3.9+
 - Docker Desktop (optional for container testing)
-- AWS CLI configured (if running scripts that access S3 locally)
+- AWS Account with access credentials (for S3 data storage)
+- AWS CLI (optional, for permanent credential storage)
 
 ### 1. Installation
-Clone the repo and install dependencies:
+Clone the repo and set up a virtual environment:
 ```bash
 git clone https://github.com/YOUR_USERNAME/mlops-project-g1mg06.git
 cd mlops-project-g1mg06
+
+# Create and activate virtual environment (recommended)
+python -m venv venv
+
+# On Windows (PowerShell)
+.\venv\Scripts\Activate.ps1
+
+# On Linux/Mac
+source venv/bin/activate
+
+# Install dependencies
 pip install -r requirements.txt
 ```
 
-### 2. Run the Data & Training Pipelines
+### 2. Configure AWS Credentials
+The data pipeline requires AWS credentials to access S3. Choose one option:
+
+**Option A: Using AWS CLI (Permanent)**
+```bash
+aws configure
+```
+Then enter your AWS Access Key ID, Secret Access Key, and default region (e.g., `eu-west-3`).
+
+**Option B: Using Environment Variables (Session-based)**
+```bash
+# On Windows (PowerShell)
+$env:AWS_ACCESS_KEY_ID="your-access-key-id"
+$env:AWS_SECRET_ACCESS_KEY="your-secret-access-key"
+$env:AWS_DEFAULT_REGION="eu-west-3"
+
+# On Linux/Mac
+export AWS_ACCESS_KEY_ID="your-access-key-id"
+export AWS_SECRET_ACCESS_KEY="your-secret-access-key"
+export AWS_DEFAULT_REGION="eu-west-3"
+```
+
+**How to get AWS credentials:**
+1. Sign in to AWS Console
+2. Navigate to IAM → Users → G1-MG06 → Security Credentials
+3. Create Access Key → Choose "Local Code"
+4. Download and save the credentials securely
+
+### 3. Run the Data & Training Pipelines
 Execute the scripts to prepare data and train the initial model:
 ```bash
 # 1. Download & Upload Raw Data
@@ -69,22 +114,22 @@ python src/data/clean_transform.py
 
 # 3. Train Model (Saves model.joblib locally and to S3)
 python src/models/train_model.py
+```
 
-### 2b. Run Unit Tests (New)
+### 4. Run Unit Tests
 Validate the code logic before starting the API:
 ```bash
 pytest tests/ -v
 ```
-```
 
-### 3. Start the API
+### 5. Start the API
 Run the FastAPI server locally:
 ```bash
 uvicorn src.api.app:app --reload
 ```
 **Swagger UI:** Access `http://127.0.0.1:8000/docs` to test endpoints.
 
-### 4. Run the Interface
+### 6. Run the Interface
 Launch the Streamlit dashboard: (Only usable in local but links to the aws api for results)
 ```bash
 streamlit run frontend.py
