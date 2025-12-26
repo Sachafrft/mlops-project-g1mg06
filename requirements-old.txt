@@ -9,4 +9,3 @@ python-multipart
 pytest
 httpx
 pytest-mock
-streamlit
